@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <title>Hava Durumu</title>
+    <style>
+        body {
+            background: #e3f2fd;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 40px;
+            text-align: center;
+        }
+        .temp {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .desc {
+            font-size: 1.4em;
+            color: #666;
+        }
+        input, button {
+            font-size: 1em;
+            padding: 8px;
+            margin: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hava Durumu</h1>
+        <input type="text" id="city" placeholder="Şəhər adı (məs: Baku)">
+        <button onclick="getWeather()">Göstər</button>
+        <div id="weather"></div>
+    </div>
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('city').value || 'Baku';
+            const apiKey = 'YOUR_API_KEY'; // Burada öz OpenWeatherMap API açarını yaz!
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&lang=az&appid=${apiKey}`;
+            const res = await fetch(url);
+            if (!res.ok) {
+                document.getElementById('weather').innerHTML = "Şəhər tapılmadı və ya limit bitib.";
+                return;
+            }
+            const data = await res.json();
+            document.getElementById('weather').innerHTML = `
+                <div class="temp">${data.main.temp}°C</div>
+                <div class="desc">${data.weather[0].description}</div>
+                <div><b>Külək:</b> ${data.wind.speed} m/s</div>
+                <div><b>Rütubət:</b> ${data.main.humidity}%</div>
+            `;
+        }
+    </script>
+</body>
+</html>
