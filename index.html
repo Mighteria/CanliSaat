@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Canlı Saat ve Hava Durumu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; background: #f3f6fb; }
+        #clock { font-size: 2.5em; margin-bottom: 20px; color: #1e293b; }
+        #weather { font-size: 1.3em; margin-top: 20px; color: #334155; }
+        #citySelect { font-size: 1em; padding: 5px; }
+        .weather-icon { vertical-align: middle; width: 48px; height: 48px; }
+    </style>
+</head>
+<body>
+    <div id="clock">00:00:00</div>
+    <div>
+        Şəhər seçin:
+        <select id="citySelect">
+            <option value="Baku">Bakı</option>
+            <option value="Ganja">Gəncə</option>
+            <option value="Sumqayit">Sumqayıt</option>
+            <option value="Mingachevir">Mingəçevir</option>
+            <option value="Shirvan">Şirvan</option>
+        </select>
+    </div>
+    <div id="weather">Hava durumu məlumatı yüklənir...</div>
+
+    <script>
+        // Canlı saat
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString("tr-TR");
+            document.getElementById("clock").textContent = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Hava Durumu API Ayarları
+        const API_KEY = '3401e03cb396d39f5f118ac9192f67eb'; // Kendi API anahtarınızı buraya yapıştırın!
+        const citySelect = document.getElementById('citySelect');
+        const weatherDiv = document.getElementById('weather');
+
+        function updateWeather(city) {
+            weatherDiv.textContent = "Hava durumu məlumatı yüklənir...";
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},AZ&appid=${API_KEY}&units=metric&lang=az`)
+                .then(resp => resp.json())
+                .then(data => {
+                    if(data.cod !== 200) {
+                        weatherDiv.textContent = "Hava durumu alına bilmədi.";
+                        return;
+                    }
+                    const desc = data.weather[0].description;
+                    const temp = Math.round(data.main.temp);
+                    const icon = data.weather[0].icon;
+                    weatherDiv.innerHTML = `
+                        <img class="weather-icon" src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="icon">
+                        <span><b>${city}</b>: ${desc}, ${temp}°C</span>
+                    `;
+                })
+                .catch(() => weatherDiv.textContent = "Hava durumu alına bilmədi.");
+        }
+
+        citySelect.addEventListener('change', (e) => {
+            updateWeather(e.target.value);
+        });
+
+        // İlk yüklemede Bakı üçün hava durumu
+        updateWeather(citySelect.value);
+    </script>
+</body>
+</html>
