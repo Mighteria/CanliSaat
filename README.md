@@ -1,2 +1,2 @@
-# MightSite
-helelik hecne bilmirem
+Murad deyirkii
+xalami cox isteyirem❤️
