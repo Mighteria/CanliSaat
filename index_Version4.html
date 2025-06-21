@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <title>Canlı Saat</title>
+    <style>
+        body {
+            background: #24243e;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .clock-container {
+            background: #383877;
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .time {
+            font-size: 3em;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .date {
+            margin-top: 10px;
+            font-size: 1.3em;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="time" id="clock">--:--:--</div>
+        <div class="date" id="date"></div>
+    </div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours().toString().padStart(2, '0');
+            let minutes = now.getMinutes().toString().padStart(2, '0');
+            let seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+
+            const days = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
+            let day = days[now.getDay()];
+            let date = now.getDate().toString().padStart(2, '0');
+            let month = (now.getMonth()+1).toString().padStart(2, '0');
+            let year = now.getFullYear();
+            document.getElementById('date').textContent = `${year}-${month}-${date}, ${day}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
